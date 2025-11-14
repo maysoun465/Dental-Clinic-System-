@@ -1,0 +1,23 @@
+.sidebar {
+  width: 260px;
+  background: white;
+  padding: 28px 20px;
+  box-shadow: 2px 0 20px rgba(15,23,42,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.brand { font-weight:800; color:#0f172a; font-size:18px }
+.nav { display:flex; flex-direction:column; gap:14px; margin-top:10px }
+.nav-item { padding:10px; border-radius:8px; color:#475569; cursor:pointer }
+.nav-item.active { background:#eef6ff; color:#0f172a; font-weight:700 }
+.profile { margin-top:auto; display:flex; gap:12px; align-items:center }
+.profile-avatar { width:44px; height:44px; border-radius:50%; object-fit:cover; background:#eee }
+.profile-name { font-weight:700 }
+.profile-id { color:#94a3b8; font-size:13px }
+.sidebar-actions { display:flex; flex-direction:column; gap:8px }
+.ghost { background:transparent; border:none; color:#475569; text-align:left; padding:8px; cursor:pointer }
+
+@media (max-width: 1000px) {
+  .sidebar { display:none }
+}
