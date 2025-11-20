@@ -1,18 +1,20 @@
 import React, { useMemo, useState } from "react";
 import "./Appointments.css";
 import AppointmentCard from "./AppointmentCard.jsx";
-import { mockAppointments } from "./mockdata.js";
 import SearchBar from "./SearchBar.jsx";
 import Tabs from "./Tabs.jsx";
 import AppointmentModal from "./AppointmentModal.jsx";
+import { useRole } from "./RoleContext.jsx";
+import { useAppointments } from "./useAppointments.js";
 
 
 export default function AppointmentsPage() {
-  const [items, setItems] = useState(mockAppointments);
+  const { role } = useRole();
+
+  const { items, createAppointment, setStatus, addNote } = useAppointments(role);
 
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("All");
-
   const [showModal, setShowModal] = useState(false);
 
   const filteredAppointments = useMemo(() => {
@@ -40,39 +42,9 @@ export default function AppointmentsPage() {
       });
   }, [items, search, activeTab]);
 
-
   const handleCreateAppointment = (form) => {
-    const newItem = {
-      id: Date.now(),
-      patient: "Current Patient", 
-      doctor: form.doctor,
-      service: form.service,
-      date: `${form.date} • ${form.time}`,
-      status: "Upcoming",
-      notes: form.notes || "",
-    };
-
-    setItems((prev) => [newItem, ...prev]);
+    createAppointment(form);
     setShowModal(false);
-  };
-
-  const handleSetStatus = (id, status) => {
-    setItems((prev) =>
-      prev.map((apt) =>
-        apt.id === id ? { ...apt, status } : apt
-      )
-    );
-  };
-
-  const handleAddNote = (id, note) => {
-    if (!note) return;
-    setItems((prev) =>
-      prev.map((apt) =>
-        apt.id === id
-          ? { ...apt, notes: (apt.notes || "") + `\n${note}` }
-          : apt
-      )
-    );
   };
 
   return (
@@ -92,13 +64,15 @@ export default function AppointmentsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setShowModal(true)}
-        >
-          + New Appointment
-        </button>
+        {role === "patient" && (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowModal(true)}
+          >
+            + New Appointment
+          </button>
+        )}
       </div>
 
       <SearchBar value={search} onChange={setSearch} />
@@ -109,9 +83,10 @@ export default function AppointmentsPage() {
           <AppointmentCard
             key={apt.id}
             apt={apt}
-            onCancel={() => handleSetStatus(apt.id, "Cancelled")}
-            onComplete={() => handleSetStatus(apt.id, "Completed")}
-            onAddNote={(note) => handleAddNote(apt.id, note)}
+            role={role}
+            onCancel={() => setStatus(apt.id, "Cancelled")}
+            onComplete={() => setStatus(apt.id, "Completed")}
+            onAddNote={(note) => addNote(apt.id, note)}
           />
         ))}
 
