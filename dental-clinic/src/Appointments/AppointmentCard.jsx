@@ -6,7 +6,17 @@ export default function AppointmentCard({
   onCancel,
   onComplete,
   onAddNote,
+  role,
 }) {
+  const canCancel =
+  role === "patient" && apt.status === "Upcoming" && !!onCancel;
+
+  const canComplete =
+  role === "doctor" && apt.status !== "Completed" && !!onComplete;
+
+  const canAddNote = role === "doctor" && !!onAddNote;
+
+
   const handleAddNoteClick = () => {
     if (!onAddNote) return;
     const note = window.prompt("Add a note for this appointment:");
@@ -33,40 +43,7 @@ export default function AppointmentCard({
         <strong>Doctor:</strong> {apt.doctor || apt.doctorName}
       </p>
 
-      <div className="appointment-actions">
-        {apt.status === "Upcoming" && onCancel && (
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-        )}
-
-        {apt.status !== "Completed" && onComplete && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={onComplete}
-          >
-            Mark Completed
-          </button>
-        )}
-
-        {onAddNote && (
-          <button
-            type="button"
-            className="btn"
-            onClick={handleAddNoteClick}
-          >
-            Add Note
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
+      
 
 
 
