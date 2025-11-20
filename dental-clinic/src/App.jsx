@@ -39,9 +39,16 @@ export default App*/
 import React from "react";
 import "./App.css";
 import AppointmentsPage from "./Appointments/AppointmentsPage";
+import { RoleProvider } from "./Appointments/RoleContext.jsx";
 
 function App() {
-  return <AppointmentsPage />;
+  return (
+    <RoleProvider initialRole="doctor">
+      <div className="App">
+        <AppointmentsPage />
+      </div>
+    </RoleProvider>
+  );
 }
 
 export default App;
