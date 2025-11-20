@@ -43,7 +43,40 @@ export default function AppointmentCard({
         <strong>Doctor:</strong> {apt.doctor || apt.doctorName}
       </p>
 
-      
+ <div className="appointment-actions">
+        {canCancel && (
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+        )}
+
+        {canComplete && (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={onComplete}
+          >
+            Mark Completed
+          </button>
+        )}
+
+        {canAddNote && (
+          <button
+            type="button"
+            className="btn"
+            onClick={handleAddNoteClick}
+          >
+            Add Note
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 
 
