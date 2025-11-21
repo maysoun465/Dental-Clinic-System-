@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import "./Sidebar.css";
 import logo from "../assets/logo.webp";
 
-
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
