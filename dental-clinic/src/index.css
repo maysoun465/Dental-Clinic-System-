@@ -1,4 +1,3 @@
-/* index.css */
 :root {
     --color-white: #ffffff;
     --color-primary: #6d28d9;
@@ -25,4 +24,11 @@ body {
     background-color: var(--color-primary-light);
     color: var(--color-text-dark);
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    margin: 0;
+    padding: 0;
 }

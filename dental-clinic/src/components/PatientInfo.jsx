@@ -3,38 +3,65 @@
 const PatientInfo = ({ patient }) => {
     return (
         <div style={styles.container}>
-            <h3 style={styles.title}>Patient Information</h3>
+            <div style={styles.header}>
+                <h3 style={styles.title}>Patient Information</h3>
+                <div style={styles.icon}>👤</div>
+            </div>
+
             <div style={styles.infoGrid}>
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Patient ID:</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>PATIENT ID</span>
+                    </div>
                     <span style={styles.value}>{patient.id}</span>
                 </div>
+
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Name:</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>NAME</span>
+                    </div>
                     <span style={styles.value}>{patient.name}</span>
                 </div>
+
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Age:</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>AGE</span>
+                    </div>
                     <span style={styles.value}>{patient.age} years</span>
                 </div>
+
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Gender:</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>GENDER</span>
+                    </div>
                     <span style={styles.value}>{patient.gender}</span>
                 </div>
+
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Email:</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>EMAIL</span>
+                    </div>
                     <span style={styles.value}>{patient.email}</span>
                 </div>
+
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Phone:</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>PHONE</span>
+                    </div>
                     <span style={styles.value}>{patient.phone}</span>
                 </div>
+
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Blood Type:</span>
-                    <span style={styles.value}>{patient.bloodType}</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>BLOOD TYPE</span>
+                    </div>
+                    <span style={styles.bloodType}>{patient.bloodType}</span>
                 </div>
+
                 <div style={styles.infoItem}>
-                    <span style={styles.label}>Last Visit:</span>
+                    <div style={styles.labelContainer}>
+                        <span style={styles.label}>LAST VISIT</span>
+                    </div>
                     <span style={styles.value}>{patient.lastVisit}</span>
                 </div>
             </div>
@@ -49,40 +76,70 @@ const styles = {
         flexDirection: 'column',
         height: '100%',
     },
+    header: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '15px',
+        paddingBottom: '12px',
+        borderBottom: '2px solid var(--color-primary)',
+    },
     title: {
         color: 'var(--color-text-dark)',
-        marginBottom: '25px',
-        fontSize: '24px',
+        fontSize: '20px',
         fontWeight: '700',
-        textAlign: 'center',
+        margin: 0,
+    },
+    icon: {
+        fontSize: '20px',
+        backgroundColor: 'var(--color-primary-light)',
+        padding: '6px',
+        borderRadius: '8px',
+        border: '2px solid var(--color-border)',
     },
     infoGrid: {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        gap: '20px',
+        gap: '12px',
         flex: 1,
-        alignContent: 'start',
     },
     infoItem: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '6px',
+        gap: '4px',
         padding: '12px',
         backgroundColor: 'var(--color-primary-light)',
-        borderRadius: '8px',
+        borderRadius: '10px',
         border: '1px solid var(--color-border)',
+        transition: 'all 0.3s ease',
+    },
+    labelContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px',
     },
     label: {
         color: 'var(--color-text-medium)',
-        fontSize: '14px',
-        fontWeight: '600',
+        fontSize: '11px',
+        fontWeight: '700',
         textTransform: 'uppercase',
         letterSpacing: '0.5px',
     },
     value: {
         color: 'var(--color-text-dark)',
+        fontSize: '14px',
+        fontWeight: '600',
+        lineHeight: '1.3',
+    },
+    bloodType: {
+        color: 'var(--color-danger)',
         fontSize: '16px',
-        fontWeight: '500',
+        fontWeight: '700',
+        backgroundColor: 'var(--color-white)',
+        padding: '3px 6px',
+        borderRadius: '5px',
+        border: '1px solid var(--color-danger)',
+        textAlign: 'center',
     },
 };
 

@@ -38,21 +38,21 @@ export const patientData = {
     medicalReports: [
         {
             id: 1,
-            title: "Dental Checkup Report",
+            title: "Blood Test Results",
             date: "2024-01-15",
             type: "Lab Report",
             status: "Normal"
         },
         {
             id: 2,
-            title: "Oral Examination Report",
+            title: "X-Ray Chest",
             date: "2024-01-10",
             type: "Radiology",
             status: "Reviewed"
         },
         {
             id: 3,
-            title: "Dental Cleaning Report",
+            title: "ECG Report",
             date: "2024-01-08",
             type: "Cardiology",
             status: "Abnormal"
