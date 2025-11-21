@@ -49,6 +49,7 @@ const Sidebar = () => {
           );
         })}
       </nav>
+      
 
       <div className="sidebar-bottom">
         <button className="logout-btn" onClick={handleLogout}>
