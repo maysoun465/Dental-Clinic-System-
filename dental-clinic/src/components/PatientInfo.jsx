@@ -4,65 +4,66 @@ const PatientInfo = ({ patient }) => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <h3 style={styles.title}>Patient Information</h3>
-                <div style={styles.icon}>👤</div>
+                <div style={styles.avatar}>😷</div>
+                <div>
+                    <h3 style={styles.title}>Patient Profile</h3>
+                    <span style={styles.patientId}>{patient.id}</span>
+                </div>
             </div>
 
-            <div style={styles.infoGrid}>
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>PATIENT ID</span>
+            <div style={styles.infoSection}>
+                <div style={styles.infoGroup}>
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Full Name</span>
+                        <span style={styles.value}>{patient.name}</span>
                     </div>
-                    <span style={styles.value}>{patient.id}</span>
-                </div>
 
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>NAME</span>
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Age</span>
+                        <span style={styles.value}>{patient.age} years</span>
                     </div>
-                    <span style={styles.value}>{patient.name}</span>
-                </div>
 
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>AGE</span>
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Gender</span>
+                        <span style={styles.value}>{patient.gender}</span>
                     </div>
-                    <span style={styles.value}>{patient.age} years</span>
                 </div>
+            </div>
 
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>GENDER</span>
+            <div style={styles.divider}></div>
+
+            <div style={styles.infoSection}>
+                <div style={styles.infoGroup}>
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Email</span>
+                        <span style={styles.value}>{patient.email}</span>
                     </div>
-                    <span style={styles.value}>{patient.gender}</span>
+
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Phone</span>
+                        <span style={styles.value}>{patient.phone}</span>
+                    </div>
                 </div>
+            </div>
 
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>EMAIL</span>
-                    </div>
-                    <span style={styles.value}>{patient.email}</span>
-                </div>
+            <div style={styles.divider}></div>
 
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>PHONE</span>
+            <div style={styles.infoSection}>
+                <div style={styles.infoGroup}>
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Blood Type</span>
+                        <span style={styles.bloodType}>{patient.bloodType}</span>
                     </div>
-                    <span style={styles.value}>{patient.phone}</span>
-                </div>
 
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>BLOOD TYPE</span>
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Last Visit</span>
+                        <span style={styles.value}>{patient.lastVisit}</span>
                     </div>
-                    <span style={styles.bloodType}>{patient.bloodType}</span>
-                </div>
 
-                <div style={styles.infoItem}>
-                    <div style={styles.labelContainer}>
-                        <span style={styles.label}>LAST VISIT</span>
+                    <div style={styles.infoItem}>
+                        <span style={styles.label}>Dentist</span>
+                        <span style={styles.value}>{patient.dentist}</span>
                     </div>
-                    <span style={styles.value}>{patient.lastVisit}</span>
                 </div>
             </div>
         </div>
@@ -71,75 +72,80 @@ const PatientInfo = ({ patient }) => {
 
 const styles = {
     container: {
-        flex: 1,
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
     },
     header: {
         display: 'flex',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '15px',
-        paddingBottom: '12px',
+        gap: '12px',
+        marginBottom: '25px',
+        paddingBottom: '15px',
         borderBottom: '2px solid var(--color-primary)',
+    },
+    avatar: {
+        fontSize: '40px',
+        backgroundColor: 'var(--color-primary-light)',
+        padding: '12px',
+        borderRadius: '50%',
+        border: '2px solid var(--color-border)',
     },
     title: {
         color: 'var(--color-text-dark)',
-        fontSize: '20px',
+        fontSize: '18px',
         fontWeight: '700',
-        margin: 0,
+        margin: '0 0 4px 0',
     },
-    icon: {
-        fontSize: '20px',
+    patientId: {
+        color: 'var(--color-text-medium)',
+        fontSize: '12px',
+        fontWeight: '600',
         backgroundColor: 'var(--color-primary-light)',
-        padding: '6px',
-        borderRadius: '8px',
-        border: '2px solid var(--color-border)',
+        padding: '2px 8px',
+        borderRadius: '10px',
     },
-    infoGrid: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '12px',
-        flex: 1,
+    infoSection: {
+        marginBottom: '20px',
+    },
+    infoGroup: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '15px',
     },
     infoItem: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '4px',
-        padding: '12px',
-        backgroundColor: 'var(--color-primary-light)',
-        borderRadius: '10px',
-        border: '1px solid var(--color-border)',
-        transition: 'all 0.3s ease',
-    },
-    labelContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '4px',
+        gap: '6px',
     },
     label: {
         color: 'var(--color-text-medium)',
         fontSize: '11px',
-        fontWeight: '700',
+        fontWeight: '600',
         textTransform: 'uppercase',
         letterSpacing: '0.5px',
     },
     value: {
         color: 'var(--color-text-dark)',
         fontSize: '14px',
-        fontWeight: '600',
-        lineHeight: '1.3',
+        fontWeight: '500',
+        lineHeight: '1.4',
     },
     bloodType: {
         color: 'var(--color-danger)',
-        fontSize: '16px',
+        fontSize: '14px',
         fontWeight: '700',
-        backgroundColor: 'var(--color-white)',
-        padding: '3px 6px',
-        borderRadius: '5px',
+        backgroundColor: 'var(--color-primary-light)',
+        padding: '4px 8px',
+        borderRadius: '6px',
         border: '1px solid var(--color-danger)',
         textAlign: 'center',
+        width: 'fit-content',
+    },
+    divider: {
+        height: '1px',
+        backgroundColor: 'var(--color-border)',
+        margin: '15px 0',
     },
 };
 

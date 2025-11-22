@@ -9,39 +9,40 @@ function App() {
     const { patientInfo, appointments, medicalReports } = patientData;
 
     return (
-        <div className="app">
-            {/* Header Section */}
+        <div style={styles.app}>
+            {/* Compact Header Section */}
             <header style={styles.header}>
                 <div style={styles.headerContent}>
-                    <div style={styles.headerTop}>
+                    <div style={styles.headerMain}>
                         <h1 style={styles.clinicName}>Dental Care Clinic</h1>
-                        <div style={styles.patientQuickInfo}>
-                            <span style={styles.patientId}>ID: {patientInfo.id}</span>
-                            <span style={styles.patientLastVisit}>Last Visit: {patientInfo.lastVisit}</span>
+                        <div style={styles.patientWelcome}>
+                            <h2 style={styles.welcomeTitle}>
+                                Welcome back, <span style={styles.patientName}>{patientInfo.name}</span>!
+                            </h2>
+                            <p style={styles.welcomeSubtitle}>
+                                Your dental care dashboard
+                            </p>
                         </div>
-                    </div>
-                    <div style={styles.welcomeSection}>
-                        <h2 style={styles.welcomeTitle}>
-                            Welcome back, <span style={styles.patientName}>{patientInfo.name}</span>! 👋
-                        </h2>
-                        <p style={styles.welcomeSubtitle}>
-                            Here's your comprehensive medical dashboard with all your important information and upcoming activities
-                        </p>
                     </div>
                 </div>
             </header>
 
             {/* Main Dashboard Content */}
             <main style={styles.main}>
-                <div style={styles.dashboardGrid}>
-                    <div style={styles.card}>
+                <div style={styles.dashboardLayout}>
+                    {/* Patient Information - Left Side Fixed */}
+                    <div style={styles.sidebar}>
                         <PatientInfo patient={patientInfo} />
                     </div>
-                    <div style={styles.card}>
-                        <Appointments appointments={appointments} />
-                    </div>
-                    <div style={styles.card}>
-                        <MedicalReports reports={medicalReports} />
+
+                    {/* Right Side - Appointments and Reports */}
+                    <div style={styles.mainContent}>
+                        <div style={styles.card}>
+                            <Appointments appointments={appointments} />
+                        </div>
+                        <div style={styles.card}>
+                            <MedicalReports reports={medicalReports} />
+                        </div>
                     </div>
                 </div>
             </main>
@@ -55,102 +56,92 @@ const styles = {
         backgroundColor: 'var(--color-primary-light)',
         margin: 0,
         padding: 0,
+        overflowX: 'hidden',
     },
     header: {
         backgroundColor: 'var(--color-white)',
         borderBottom: '3px solid var(--color-primary)',
-        padding: '15px 0 10px 0',
+        padding: '12px 0',
         margin: 0,
-        boxShadow: '0 4px 12px rgba(109, 40, 217, 0.15)',
-        background: 'linear-gradient(135deg, var(--color-white) 0%, var(--color-primary-light) 100%)',
+        boxShadow: '0 2px 6px rgba(109, 40, 217, 0.1)',
     },
     headerContent: {
         maxWidth: '100%',
         margin: '0 auto',
-        padding: '0 15px',
+        padding: '0 20px',
     },
-    headerTop: {
+    headerMain: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '12px',
-        paddingBottom: '12px',
-        borderBottom: '2px solid var(--color-border)',
+        flexWrap: 'wrap',
+        gap: '15px',
     },
     clinicName: {
         color: 'var(--color-primary)',
-        fontSize: '28px',
+        fontSize: '24px',
         fontWeight: '800',
         margin: 0,
-        textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
     },
-    patientQuickInfo: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        gap: '4px',
-    },
-    patientId: {
-        color: 'var(--color-text-medium)',
-        fontSize: '13px',
-        fontWeight: '600',
-        backgroundColor: 'var(--color-primary-light)',
-        padding: '5px 10px',
-        borderRadius: '15px',
-        border: '1px solid var(--color-border)',
-    },
-    patientLastVisit: {
-        color: 'var(--color-text-blue)',
-        fontSize: '12px',
-        fontWeight: '500',
-    },
-    welcomeSection: {
-        textAlign: 'center',
-        padding: '8px 0',
+    patientWelcome: {
+        textAlign: 'right',
     },
     welcomeTitle: {
         color: 'var(--color-text-dark)',
-        fontSize: '24px',
-        fontWeight: '700',
-        marginBottom: '6px',
-        lineHeight: '1.3',
+        fontSize: '18px',
+        fontWeight: '600',
+        margin: '0 0 2px 0',
     },
     patientName: {
         color: 'var(--color-primary)',
-        fontWeight: '800',
+        fontWeight: '700',
     },
     welcomeSubtitle: {
         color: 'var(--color-text-medium)',
         fontSize: '14px',
         fontWeight: '400',
-        maxWidth: '600px',
-        margin: '0 auto',
-        lineHeight: '1.4',
+        margin: 0,
     },
     main: {
-        maxWidth: '100%',
+        width: '100%',
         margin: 0,
-        padding: '15px',
-        minHeight: 'calc(100vh - 150px)',
+        padding: '15px 0',
+        minHeight: 'calc(100vh - 80px)',
     },
-    dashboardGrid: {
+    dashboardLayout: {
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr',
-        gap: '15px',
-        alignItems: 'stretch',
+        gridTemplateColumns: '300px 1fr',
+        gap: '0',
+        alignItems: 'start',
         height: '100%',
-        minHeight: '500px',
+        width: '100%',
+        margin: 0,
+        padding: 0,
+    },
+    sidebar: {
+        backgroundColor: 'var(--color-white)',
+        padding: '20px',
+        borderRadius: '0 12px 12px 0',
+        border: '2px solid var(--color-border)',
+        borderLeft: 'none',
+        boxShadow: '2px 0 6px rgba(109, 40, 217, 0.1)',
+        height: '100%',
+        minHeight: 'calc(100vh - 110px)',
+    },
+    mainContent: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '15px',
+        padding: '0 20px',
+        width: '100%',
     },
     card: {
         backgroundColor: 'var(--color-white)',
         padding: '20px',
         borderRadius: '12px',
         border: '2px solid var(--color-border)',
-        boxShadow: '0 4px 15px rgba(109, 40, 217, 0.12)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'all 0.3s ease',
+        boxShadow: '0 4px 8px rgba(109, 40, 217, 0.1)',
+        width: '100%',
     }
 };
 

@@ -21,17 +21,18 @@ const Appointments = ({ appointments }) => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <h3 style={styles.title}>Upcoming Appointments</h3>
-                <div style={styles.icon}>📅</div>
+                <h3 style={styles.title}>Patient Appointments</h3>
+                <span style={styles.icon}>🦷</span>
             </div>
 
-            <div style={styles.appointmentsList}>
+            <div style={styles.appointmentsGrid}>
                 {appointments.map((appointment) => (
                     <div key={appointment.id} style={styles.appointmentCard}>
                         <div style={styles.appointmentHeader}>
                             <div style={styles.doctorInfo}>
                                 <h4 style={styles.doctorName}>{appointment.doctor}</h4>
                                 <span style={styles.department}>{appointment.department}</span>
+                                <span style={styles.appointmentType}>{appointment.type}</span>
                             </div>
                             <span style={{ ...styles.status, ...getStatusStyle(appointment.status) }}>
                                 {appointment.status}
@@ -56,16 +57,15 @@ const Appointments = ({ appointments }) => {
 
 const styles = {
     container: {
-        flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
+        width: '100%',
     },
     header: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '15px',
+        marginBottom: '20px',
         paddingBottom: '12px',
         borderBottom: '2px solid var(--color-primary)',
     },
@@ -76,30 +76,26 @@ const styles = {
         margin: 0,
     },
     icon: {
-        fontSize: '20px',
-        backgroundColor: 'var(--color-primary-light)',
-        padding: '6px',
-        borderRadius: '8px',
-        border: '2px solid var(--color-border)',
+        fontSize: '22px',
     },
-    appointmentsList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        flex: 1,
+    appointmentsGrid: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '15px',
+        width: '100%',
     },
     appointmentCard: {
-        padding: '15px',
-        border: '1px solid var(--color-border)',
+        padding: '18px',
+        border: '2px solid var(--color-border)',
         borderRadius: '10px',
         backgroundColor: 'var(--color-primary-light)',
-        transition: 'all 0.3s ease',
+        minHeight: '140px',
     },
     appointmentHeader: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: '10px',
+        marginBottom: '12px',
     },
     doctorInfo: {
         flex: 1,
@@ -108,33 +104,33 @@ const styles = {
         color: 'var(--color-text-dark)',
         fontSize: '16px',
         fontWeight: '700',
-        marginBottom: '3px',
-        lineHeight: '1.2',
+        marginBottom: '4px',
     },
     department: {
-        color: 'var(--color-text-blue)',
-        fontSize: '13px',
+        color: 'var(--color-primary)',
+        fontSize: '14px',
         fontWeight: '600',
+        marginBottom: '2px',
+    },
+    appointmentType: {
+        color: 'var(--color-text-medium)',
+        fontSize: '12px',
+        fontWeight: '500',
     },
     status: {
-        padding: '4px 10px',
+        padding: '6px 12px',
         borderRadius: '15px',
-        fontSize: '11px',
+        fontSize: '12px',
         fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
-        whiteSpace: 'nowrap',
     },
     appointmentDetails: {
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
     },
     dateTime: {
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-        flex: 1,
+        gap: '10px',
     },
     calendarIcon: {
         fontSize: '16px',
@@ -142,17 +138,17 @@ const styles = {
     timeInfo: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '1px',
+        gap: '2px',
     },
     date: {
         color: 'var(--color-text-dark)',
-        fontSize: '13px',
+        fontSize: '14px',
         fontWeight: '600',
     },
     time: {
         color: 'var(--color-text-blue)',
-        fontSize: '12px',
-        fontWeight: '500',
+        fontSize: '14px',
+        fontWeight: '600',
     },
 };
 

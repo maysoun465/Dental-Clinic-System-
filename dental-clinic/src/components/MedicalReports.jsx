@@ -26,17 +26,18 @@ const MedicalReports = ({ reports }) => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <h3 style={styles.title}>Medical Reports</h3>
-                <div style={styles.icon}>📋</div>
+                <h3 style={styles.title}>Patient Reports</h3>
+                <span style={styles.icon}>📋</span>
             </div>
 
-            <div style={styles.reportsList}>
+            <div style={styles.reportsGrid}>
                 {reports.map((report) => (
                     <div key={report.id} style={styles.reportCard}>
                         <div style={styles.reportHeader}>
                             <div style={styles.reportInfo}>
                                 <h4 style={styles.reportTitle}>{report.title}</h4>
                                 <span style={styles.reportType}>{report.type}</span>
+                                <span style={styles.reportDescription}>{report.description}</span>
                             </div>
                             <span style={{ ...styles.status, ...getStatusStyle(report.status) }}>
                                 {report.status}
@@ -44,10 +45,7 @@ const MedicalReports = ({ reports }) => {
                         </div>
 
                         <div style={styles.reportDetails}>
-                            <div style={styles.dateInfo}>
-                                <span style={styles.fileIcon}>📄</span>
-                                <span style={styles.reportDate}>{report.date}</span>
-                            </div>
+                            <span style={styles.reportDate}>📅 {report.date}</span>
                         </div>
                     </div>
                 ))}
@@ -58,16 +56,15 @@ const MedicalReports = ({ reports }) => {
 
 const styles = {
     container: {
-        flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
+        width: '100%',
     },
     header: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '15px',
+        marginBottom: '20px',
         paddingBottom: '12px',
         borderBottom: '2px solid var(--color-primary)',
     },
@@ -78,30 +75,26 @@ const styles = {
         margin: 0,
     },
     icon: {
-        fontSize: '20px',
-        backgroundColor: 'var(--color-primary-light)',
-        padding: '6px',
-        borderRadius: '8px',
-        border: '2px solid var(--color-border)',
+        fontSize: '22px',
     },
-    reportsList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        flex: 1,
+    reportsGrid: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '15px',
+        width: '100%',
     },
     reportCard: {
-        padding: '15px',
-        border: '1px solid var(--color-border)',
+        padding: '18px',
+        border: '2px solid var(--color-border)',
         borderRadius: '10px',
         backgroundColor: 'var(--color-white)',
-        transition: 'all 0.3s ease',
+        minHeight: '140px',
     },
     reportHeader: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: '10px',
+        marginBottom: '12px',
     },
     reportInfo: {
         flex: 1,
@@ -110,39 +103,33 @@ const styles = {
         color: 'var(--color-text-dark)',
         fontSize: '16px',
         fontWeight: '700',
-        marginBottom: '3px',
-        lineHeight: '1.2',
+        marginBottom: '4px',
     },
     reportType: {
+        color: 'var(--color-primary)',
+        fontSize: '14px',
+        fontWeight: '600',
+        marginBottom: '4px',
+        display: 'block',
+    },
+    reportDescription: {
         color: 'var(--color-text-medium)',
-        fontSize: '13px',
+        fontSize: '12px',
         fontWeight: '500',
     },
     status: {
-        padding: '4px 10px',
+        padding: '6px 12px',
         borderRadius: '15px',
-        fontSize: '11px',
+        fontSize: '12px',
         fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
-        whiteSpace: 'nowrap',
     },
     reportDetails: {
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-    },
-    dateInfo: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '6px',
-    },
-    fileIcon: {
-        fontSize: '14px',
     },
     reportDate: {
         color: 'var(--color-text-blue)',
-        fontSize: '13px',
+        fontSize: '14px',
         fontWeight: '600',
     },
 };
