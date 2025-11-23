@@ -21,7 +21,7 @@ const Appointments = ({ appointments }) => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <h3 style={styles.title}>Patient Appointments</h3>
+                <h3 style={styles.title}>Dental Appointments</h3>
                 <span style={styles.icon}>🦷</span>
             </div>
 
@@ -47,6 +47,7 @@ const Appointments = ({ appointments }) => {
                                     <span style={styles.time}>{appointment.time}</span>
                                 </div>
                             </div>
+                            <span style={styles.room}>📍 {appointment.room}</span>
                         </div>
                     </div>
                 ))}
@@ -80,7 +81,7 @@ const styles = {
     },
     appointmentsGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
         gap: '15px',
         width: '100%',
     },
@@ -125,6 +126,7 @@ const styles = {
     },
     appointmentDetails: {
         display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     dateTime: {
@@ -149,6 +151,14 @@ const styles = {
         color: 'var(--color-text-blue)',
         fontSize: '14px',
         fontWeight: '600',
+    },
+    room: {
+        color: 'var(--color-text-medium)',
+        fontSize: '12px',
+        fontWeight: '500',
+        backgroundColor: 'var(--color-white)',
+        padding: '4px 8px',
+        borderRadius: '6px',
     },
 };
 

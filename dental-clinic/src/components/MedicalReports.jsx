@@ -26,7 +26,7 @@ const MedicalReports = ({ reports }) => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <h3 style={styles.title}>Patient Reports</h3>
+                <h3 style={styles.title}>Dental Reports</h3>
                 <span style={styles.icon}>📋</span>
             </div>
 
@@ -38,6 +38,7 @@ const MedicalReports = ({ reports }) => {
                                 <h4 style={styles.reportTitle}>{report.title}</h4>
                                 <span style={styles.reportType}>{report.type}</span>
                                 <span style={styles.reportDescription}>{report.description}</span>
+                                <span style={styles.doctor}>👨‍⚕️ {report.doctor}</span>
                             </div>
                             <span style={{ ...styles.status, ...getStatusStyle(report.status) }}>
                                 {report.status}
@@ -79,7 +80,7 @@ const styles = {
     },
     reportsGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
         gap: '15px',
         width: '100%',
     },
@@ -116,6 +117,12 @@ const styles = {
         color: 'var(--color-text-medium)',
         fontSize: '12px',
         fontWeight: '500',
+    },
+    doctor: {
+        color: 'var(--color-text-blue)',
+        fontSize: '11px',
+        fontWeight: '600',
+        marginTop: '4px',
     },
     status: {
         padding: '6px 12px',
