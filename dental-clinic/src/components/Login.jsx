@@ -1,4 +1,5 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
   const [selectedRole, setSelectedRole] = useState('Patient')
@@ -11,7 +12,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Handle login logic here
     console.log('Login attempt:', { selectedRole, email, password })
   }
 
@@ -147,9 +147,9 @@ const Login = () => {
                         </a>
                         <p className="text-[#2D3748] dark:text-gray-300">
                           Don't have an account?{' '}
-                          <a className="font-medium text-primary hover:text-primary/80 dark:text-primary/80 dark:hover:text-primary" href="#">
+                          <Link className="font-medium text-primary hover:text-primary/80 dark:text-primary/80 dark:hover:text-primary" to="/signup">
                             Sign Up
-                          </a>
+                          </Link>
                         </p>
                       </div>
                     </div>
