@@ -1,12 +1,9 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import AppointmentsApp from "./Pages/AppointmentsApp.jsx";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import AllProject from './AllProject.jsx'
 
-
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <AppointmentsApp />
-  </StrictMode>,
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <AllProject />
+  </React.StrictMode>,
 )
