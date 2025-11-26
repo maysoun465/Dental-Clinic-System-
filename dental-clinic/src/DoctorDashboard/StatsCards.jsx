@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './StatsCards.css';
 
 const StatCard = ({ title, value, variant = 'blue', icon }) => (
@@ -20,12 +20,9 @@ const StatCard = ({ title, value, variant = 'blue', icon }) => (
   </div>
 );
 
-const StatsCards = ({ stats = null }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
+const StatsCards = ({ stats = null, searchTerm = '', setSearchTerm = () => {} }) => {
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log('Searching for:', searchTerm);
   };
 
   const defaults = [
@@ -43,15 +40,15 @@ const StatsCards = ({ stats = null }) => {
           <label htmlFor="stats-search" className="visually-hidden">Search patients by name</label>
           <div className="search-input-wrapper">
             <span className="search-icon" aria-hidden>🔎</span>
-            <input
-              id="stats-search"
-              type="search"
-              placeholder="Search patients by name..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-              aria-label="Search patients"
-            />
+              <input
+                id="stats-search"
+                type="search"
+                placeholder="Search patients by name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+                aria-label="Search patients"
+              />
           </div>
 
           <button type="submit" className="search-btn" aria-label="Search">
