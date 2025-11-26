@@ -1,10 +1,9 @@
-﻿import React from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-import PatientDashboard from './pages/PatientDashboard.jsx' 
-import './index.css'
+import AllProject from './AllProject.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
-        <PatientDashboard />
-    </React.StrictMode>,
+  <React.StrictMode>
+    <AllProject />
+  </React.StrictMode>,
 )
