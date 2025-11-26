@@ -1,4 +1,4 @@
-import { useState } from 'react'
+/*import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -32,4 +32,23 @@ function App() {
   )
 }
 
-export default App
+export default App*/
+
+
+
+import React from "react";
+import "../App.css";
+import AppointmentsPage from "../Appointments/AppointmentsPage";
+import { RoleProvider } from "../Appointments/RoleContext.jsx";
+
+function AppointmentsApp() {
+  return (
+    <RoleProvider initialRole="doctor">
+      <div className="App">
+        <AppointmentsPage />
+      </div>
+    </RoleProvider>
+  );
+}
+
+export default AppointmentsApp;
