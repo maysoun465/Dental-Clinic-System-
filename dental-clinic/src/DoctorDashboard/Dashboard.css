@@ -1,8 +1,15 @@
+:root {
+  --sidebar-width: 280px;
+  --header-height: 88px;
+}
+
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 
 body {
   font-family: "Segoe UI", sans-serif;
@@ -63,8 +70,24 @@ body {
 
 .dashboard {
   flex: 1;
-  margin-left: 280px;
-  padding: 2rem;
+  margin-left: var(--sidebar-width, 280px);
+  padding: 0;
+}
+
+.dashboard-content {
+  /* ensure content sits below the fixed header; add a small buffer */
+  padding-top: calc(var(--header-height, 88px) + 16px);
+  box-sizing: border-box;
+  overflow: auto;
+  position: relative;
+}
+
+.main {
+  width: 100%;
+  padding: 1.5rem 2rem;
+}
+.content-grid, .appointments, .stats-wrapper {
+  width: 100%;
 }
 
 /* Titles */

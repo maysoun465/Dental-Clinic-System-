@@ -1,70 +1,111 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import logo from "../images/logo.webp";
 import "./Sidebar.css";
-import logo from "../assets/logo.webp";
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    
     localStorage.removeItem("userRole");
     localStorage.removeItem("isAuthenticated");
+    
+   
     navigate("/login");
   };
 
-  const navItems = [
-    { to: '/doctor', icon: 'dashboard', label: 'Dashboard' },
-    { to: '/doctor/patients', icon: 'group', label: 'Patients' },
-    { to: '/doctor/appointments', icon: 'calendar_month', label: 'Appointments', badge: 5 },
-  ];
-
   return (
-    <aside className="sidebar" aria-label="Primary navigation">
-
-      <div className="sidebar-top">
-        <div className="brand-wrap">
-          <img src={logo} className="sidebar-logo" alt="Clinic Logo" />
+    <aside className="doctor-sidebar">
+   
+      <div className="sidebar-header">
+        <div className="clinic-logo">
+          <img src={logo} alt="EyeCare Clinic Logo" 
+          className="clinic-logo-img" />
+          
         </div>
-        <div className="doctor-info">
-          <h2 className="doctor-name">Dr. Menna Zakaria</h2>
-          <p className="doctor-role">Dentist</p>
+        <div className="doctor-profile-header">
+          <h1>Dr. Menna Zakaria</h1>
+          <p>Dentist</p>
         </div>
       </div>
 
-      <nav className="sidebar-nav" role="navigation">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.to;
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={`nav-link ${isActive ? 'active' : ''}`}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              <span className="material-symbols-outlined nav-icon" aria-hidden>{item.icon}</span>
-              <p className="nav-label">{item.label}</p>
-              {item.badge ? <span className="badge" aria-hidden>{item.badge}</span> : null}
-            </Link>
-          );
-        })}
+    
+      <nav className="sidebar-nav">
+        <Link 
+          to="/doctor" 
+          className={`nav-item ${location.pathname === '/doctor' ? 'active' : ''}`}
+        >
+          <span className="nav-icon material-symbols-outlined">dashboard</span>
+          <span className="nav-label">Dashboard</span>
+        </Link>
+
+        <Link 
+          to="/doctor/patients" 
+          className={`nav-item ${location.pathname === '/doctor/patients' ? 'active' : ''}`}
+        >
+          <span className="nav-icon material-symbols-outlined">group</span>
+          <span className="nav-label">Patients</span>
+        </Link>
+
+        <Link 
+          to="/doctor/appointments" 
+          className={`nav-item ${location.pathname === '/doctor/appointments' ? 'active' : ''}`}
+        >
+          <span className="nav-icon material-symbols-outlined">calendar_month</span>
+          <span className="nav-label">Appointments</span>
+          <span className="nav-badge">5</span>
+        </Link>
+
+        <Link 
+          to="/doctor/finance" 
+          className={`nav-item ${location.pathname === '/doctor/finance' ? 'active' : ''}`}
+        >
+          <span className="nav-icon material-symbols-outlined">payments</span>
+          <span className="nav-label">Finance</span>
+        </Link>
+
+        <Link 
+          to="/doctor/clinic-system" 
+          className={`nav-item ${location.pathname === '/doctor/clinic-system' ? 'active' : ''}`}
+        >
+          <span className="nav-icon material-symbols-outlined">medical_services</span>
+          <span className="nav-label">Clinic System</span>
+        </Link>
+
+        <Link 
+          to="/doctor/settings" 
+          className={`nav-item ${location.pathname === '/doctor/settings' ? 'active' : ''}`}
+        >
+          <span className="nav-icon material-symbols-outlined">settings</span>
+          <span className="nav-label">Settings</span>
+        </Link>
+
+        
+        <div 
+          className="nav-item logout-button"
+          onClick={handleLogout}
+        >
+          <span className="nav-icon material-symbols-outlined">logout</span>
+          <span className="nav-label">Logout</span>
+        </div>
       </nav>
 
-
-      <div className="sidebar-bottom">
-        <button className="logout-btn" onClick={handleLogout}>
-          <span className="material-symbols-outlined">logout</span>
-          <span className="logout-label">Logout</span>
-        </button>
-
-        <div className="sidebar-user">
-          <img src="/avatar-placeholder.svg" alt="User avatar" className="user-img" />
-          <div className="user-meta">
-            <h4>Dr. Menna Zakaria</h4>
-            <p>Dentist</p>
-          </div>
-        </div>
-      </div>
+      
+<div className="user-profile">
+  <div className="user-avatar">
+    <img 
+      src="/src/images/images.png" 
+      alt="Doctor Profile" 
+      className="user-avatar-img"
+    />
+  </div>
+  <div className="user-info">
+    <h3>Dr. Menna Zakaria </h3>
+    <p>Dentist</p>
+  </div>
+</div>
 
     </aside>
   );
