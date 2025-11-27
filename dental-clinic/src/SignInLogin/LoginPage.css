@@ -1,0 +1,257 @@
+.container {
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  background-color: #f8fafc !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.background {
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+  background-image: url('src/assets/login1.jpeg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  opacity: 0.1 !important;
+  z-index: 0 !important;
+}
+
+.mainContent {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  height: 700px !important;
+  background-color: white !important;
+  border-radius: 24px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+.brandSection {
+  flex: 1 !important;
+  background: linear-gradient(135deg, #752eee 0%, #7c3aed 100%) !important;
+  color: white !important;
+  padding: 60px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  margin-bottom: 40px !important;
+}
+
+.logoImage {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 3px solid white !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.logoFallback {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 3px solid white !important;
+}
+
+.clinicName {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+}
+
+.brandContent {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.welcomeText {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 16px !important;
+}
+
+.subtitle {
+  font-size: 1.125rem !important;
+  opacity: 0.9 !important;
+  line-height: 1.6 !important;
+  margin-bottom: 40px !important;
+}
+
+.loginSection {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 40px !important;
+  background-color: white !important;
+}
+
+.loginCard {
+  width: 100% !important;
+  max-width: 400px !important;
+}
+
+.loginHeader {
+  text-align: center !important;
+  margin-bottom: 40px !important;
+}
+
+.loginTitle {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.loginSubtitle {
+  font-size: 1rem !important;
+  color: #64748b !important;
+  margin: 0 !important;
+}
+
+.roleGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-bottom: 32px !important;
+}
+
+.roleCard {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  padding: 20px 12px !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  background-color: #f8fafc !important;
+}
+
+.roleCardActive {
+  border-color: #9b3bdb !important;
+  background-color: #eff6ff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+}
+
+.roleImageContainer {
+  position: relative !important;
+  margin-bottom: 8px !important;
+}
+
+.roleImage {
+  width: 50px !important;
+  height: 50px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 2px solid #e2e8f0 !important;
+}
+
+.roleFallback {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  font-size: 1.5rem !important;
+}
+
+.roleText {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+}
+
+.formGroup {
+  margin-bottom: 24px !important;
+}
+
+.label {
+  display: block !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  margin-bottom: 8px !important;
+}
+
+.input {
+  width: 100% !important;
+  padding: 16px !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  font-size: 1rem !important;
+  color: #1f2937 !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+}
+
+.loginButton {
+  width: 100% !important;
+  background-color: #7c3aed !important;
+  color: white !important;
+  border: none !important;
+  padding: 16px 24px !important;
+  border-radius: 12px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.buttonText {
+  font-size: 1rem !important;
+}
+
+.buttonIcon {
+  font-size: 1.25rem !important;
+}
+
+.signUpSection {
+  text-align: center !important;
+  padding: 20px 0 !important;
+  margin: 16px 0 !important;
+  border-top: 1px solid #e2e8f0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.signUpText {
+  font-size: 0.875rem !important;
+  color: #64748b !important;
+  margin: 0 !important;
+}
+
+.signUpLink {
+  color: #7c3aed !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  transition: color 0.2s ease !important;
+}
+
+.signUpLink:hover {
+  color: #8851e7 !important;
+}
