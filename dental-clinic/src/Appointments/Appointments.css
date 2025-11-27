@@ -1,28 +1,66 @@
+/* ===========================
+   Page Layout
+   =========================== */
 .appointments-page {
   padding: 2rem;
-  background-color: #f7f3ff;     
+  background-color: #f7f3ff; /* soft lavender background */
 }
 
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+/* ===========================
+   Appointment Cards
+   =========================== */
 .appointment-card {
   background: #fff;
-  border: 1px solid #e9defc;    
+  border: 1px solid #e9defc; /* soft purple border */
   border-radius: 14px;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
 }
 
-.appointment-title {
-  margin: 0 0 2px 0;
-  color: #2e1065;                
+.appointment-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.appointment-card__date {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.appointment-card__title {
+  margin: 4px 0 6px;
+  color: #111827;
+  font-size: 1.15rem;
   font-weight: 800;
 }
 
 .appointment-meta {
-  color: #5b21b6;               
   margin: 2px 0;
+  color: #5b21b6; /* your original purple */
+}
+
+.appointment-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 
+/* ===========================
+   Status Pills
+   Purple Theme
+   =========================== */
 .status {
   display: inline-block;
   margin-top: 8px;
@@ -31,22 +69,114 @@
   font-size: 0.78rem;
   font-weight: 700;
 }
-.status.upcoming  { background: #ede9fe; color: #4c1d95; }
-.status.completed { background: #dcfce7; color: #166534; }
-.status.cancelled { background: #fee2e2; color: #991b1b; }
-.status.pending   { background: #fef3c7; color: #92400e; }
-.status.confirmed { background: #d1fae5; color: #065f46; }
+
+.status.upcoming  { background: #ede9fe; color: #4c1d95; }  /* lavender / deep purple */
+.status.completed { background: #dcfce7; color: #166534; }  /* green */
+.status.cancelled { background: #fee2e2; color: #991b1b; }  /* red */
+.status.pending   { background: #fef3c7; color: #92400e; }  /* yellow */
+.status.confirmed { background: #d1fae5; color: #065f46; }  /* teal */
 
 
+/* ===========================
+   Buttons (Purple Theme)
+   =========================== */
 .btn {
-  background: #f3e8ff;
-  color: #4c1d95;
-  border: 1px solid #e9defc;
-  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 14px;
   border-radius: 10px;
-  font-weight: 700;
+  border: 1px solid #e9defc;
+  background: #f3e8ff;    /* your soft purple */
+  color: #4c1d95;         /* deep purple text */
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.15s ease-in-out;
 }
-.btn:hover { filter: brightness(0.97); }
-.btn-danger { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
-.btn-primary { background: #6d28d9; color: #fff; border-color: #6d28d9; }
+
+.btn:hover {
+  filter: brightness(0.97);
+}
+
+.btn-primary {
+  background: #6d28d9;     /* purple primary button */
+  border-color: #6d28d9;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.btn-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.btn-danger:hover {
+  background: #fecaca;
+}
+
+/* ===========================
+   Modal (New Appointment)
+   =========================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45); /* dark blur backdrop */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e9defc;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e9defc;
+}
+
+.modal-body {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.modal-body label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  color: #4c1d95;
+  font-size: 0.9rem;
+}
+
+.modal-body input,
+.modal-body textarea {
+  border-radius: 10px;
+  border: 1px solid #e9defc;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+}
+
+.modal-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
