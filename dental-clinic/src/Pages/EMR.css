@@ -1,0 +1,195 @@
+.emr-page-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.emr-main-content {
+  margin-left: 280px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.emr-header {
+  background: white;
+  color: white;
+  padding: 1rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 500;
+}
+
+.action-button.primary {
+  background-color: white;
+  color: #6f11db;
+}
+
+.action-button.primary:hover {
+  background-color: #f1e6fb;
+}
+
+.action-button.secondary.print-button {
+  background-color: white;
+  color: red;
+  border: 1px solid red;   
+}
+
+.action-button.secondary.print-button:hover {
+  background-color: red;
+  color: white;
+}
+
+.print-button .material-symbols-outlined {
+  color: red;
+}
+
+.print-button:hover .material-symbols-outlined {
+  color: white;
+}
+
+.patient-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  margin: 1.5rem 2.5rem;
+  padding: 1.2rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  gap: 15px;
+}
+
+.patient-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.patient-avatar {
+  background: #ebe0fe;
+  padding: 12px;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  color: #7a00d8;
+}
+
+.patient-display-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.patient-subtitle {
+  color: gray;
+  font-size: 0.9rem;
+  margin: 3px 0 0 0;
+}
+
+.patient-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-item .material-symbols-outlined {
+  font-size: 28px;
+  color: #8500d8;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #8500d8;
+  margin: 2px 0 0 0;
+  font-size: 0.95rem;
+}
+
+.emr-content-wrapper {
+  flex-grow: 1;
+  background: #fff;
+  margin: 0 2.5rem 1.5rem 2.5rem;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+  .emr-main-content {
+    margin-left: 0;
+  }
+
+  .emr-header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 1rem;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .patient-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .emr-content-wrapper {
+    padding: 1rem;
+    margin: 0 1rem 1rem 1rem;
+  }
+
+
+
+
+
+  
+}
