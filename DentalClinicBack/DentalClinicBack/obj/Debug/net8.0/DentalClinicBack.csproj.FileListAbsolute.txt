@@ -145,3 +145,5 @@ D:\Dentalback\DentalClinicBack\DentalClinicBack\obj\Debug\net8.0\refint\DentalCl
 D:\Dentalback\DentalClinicBack\DentalClinicBack\obj\Debug\net8.0\DentalClinicBack.pdb
 D:\Dentalback\DentalClinicBack\DentalClinicBack\obj\Debug\net8.0\DentalClinicBack.genruntimeconfig.cache
 D:\Dentalback\DentalClinicBack\DentalClinicBack\obj\Debug\net8.0\ref\DentalClinicBack.dll
+D:\Dentalback\DentalClinicBack\DentalClinicBack\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\Dentalback\DentalClinicBack\DentalClinicBack\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
