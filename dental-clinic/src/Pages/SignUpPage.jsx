@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -7,11 +8,11 @@ export default function SignUpPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "",
     phone: "",
     dateOfBirth: ""
   });
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,14 +21,10 @@ export default function SignUpPage() {
     });
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    
-    if (!formData.role) {
-      alert("Please select your role.");
-      return;
-    }
 
+    // Validation
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
       return;
@@ -38,56 +35,51 @@ export default function SignUpPage() {
       return;
     }
 
-    const userData = {
-      fullName: formData.fullName,
-      email: formData.email,
-      role: formData.role,
-      phone: formData.phone,
-      dateOfBirth: formData.dateOfBirth,
-      createdAt: new Date().toISOString()
-    };
+    setLoading(true);
 
-    const existingUsers = JSON.parse(localStorage.getItem("clinicUsers")) || [];
-    
-    if (existingUsers.some(user => user.email === formData.email)) {
-      alert("Email already exists. Please use a different email.");
-      return;
+    try {
+      const response = await axios.post("https://localhost:7231/api/auth/register", {
+        username: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        role: "Patient", // Force role to Patient
+        phone: formData.phone,
+        dateOfBirth: formData.dateOfBirth
+      });
+
+      if (response.status === 200) {
+        alert("Account created successfully! Please login.");
+        navigate("/login");
+      }
+    } catch (error) {
+      if (error.response && error.response.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
-
-    existingUsers.push(userData);
-    localStorage.setItem("clinicUsers", JSON.stringify(existingUsers));
-
-    const credentials = JSON.parse(localStorage.getItem("clinicCredentials")) || [];
-    credentials.push({
-      email: formData.email,
-      password: formData.password,
-      role: formData.role
-    });
-    localStorage.setItem("clinicCredentials", JSON.stringify(credentials));
-
-    alert("Account created successfully! Please login with your credentials.");
-    navigate("/login");
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.background}></div>
-      
       <div style={styles.mainContent}>
         <div style={styles.brandSection}>
           <div style={styles.logo}>
-            <img 
-              src="src/images/logo.webp" 
-              alt="Dr Menna Zakaria" 
+            <img
+              src="src/images/logo.webp"
+              alt="Dr Menna Zakaria"
               style={styles.logoImage}
               onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
+                e.target.style.display = "none";
+                e.target.nextSibling.style.display = "flex";
               }}
             />
-            <span 
-              className="material-symbols-outlined" 
-              style={{ display: 'none', fontSize: '3rem', color: 'white' }}
+            <span
+              className="material-symbols-outlined"
+              style={{ display: "none", fontSize: "3rem", color: "white" }}
             >
               local_hospital
             </span>
@@ -96,15 +88,8 @@ export default function SignUpPage() {
           <div style={styles.brandContent}>
             <h2 style={styles.welcomeText}>Create Your Account</h2>
             <p style={styles.subtitle}>
+              Join our dental clinic system as a patient
             </p>
-            <div style={styles.features}>
-              <div style={styles.featureItem}>
-              </div>
-              <div style={styles.featureItem}>
-              </div>
-              <div style={styles.featureItem}>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -112,7 +97,6 @@ export default function SignUpPage() {
           <div style={styles.signupCard}>
             <div style={styles.signupHeader}>
               <h2 style={styles.signupTitle}>Create Account</h2>
-              <p style={styles.signupSubtitle}>Join our clinic system</p>
             </div>
 
             <form onSubmit={handleSignUp}>
@@ -143,7 +127,7 @@ export default function SignUpPage() {
               </div>
 
               <div style={styles.formRow}>
-                <div style={{...styles.formGroup, flex: 1, marginRight: '12px'}}>
+                <div style={{ ...styles.formGroup, flex: 1, marginRight: "12px" }}>
                   <label style={styles.label}>Phone Number</label>
                   <input
                     type="tel"
@@ -154,7 +138,7 @@ export default function SignUpPage() {
                     onChange={handleChange}
                   />
                 </div>
-                <div style={{...styles.formGroup, flex: 1}}>
+                <div style={{ ...styles.formGroup, flex: 1 }}>
                   <label style={styles.label}>Date of Birth</label>
                   <input
                     type="date"
@@ -166,41 +150,8 @@ export default function SignUpPage() {
                 </div>
               </div>
 
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Select Role *</label>
-                <div style={styles.roleContainer}>
-                  <div style={styles.roleGrid}>
-                    {["Receptionist", "Patient"].map((r) => (
-                      <div
-                        key={r}
-                        style={{
-                          ...styles.roleCard,
-                          ...(formData.role === r ? styles.roleCardActive : {})
-                        }}
-                        onClick={() => setFormData({...formData, role: r})}
-                      >
-                        <div style={styles.roleImageContainer}>
-                          <img 
-                            src={`src/images/${r.toLowerCase()}-icon.png`} 
-                            alt={r}
-                            style={styles.roleImage}
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                              const emoji = r === "Receptionist" ? "" : "";
-                              e.target.nextSibling.textContent = emoji;
-                            }}
-                          />
-                          <span style={styles.roleFallback}></span>
-                        </div>
-                        <span style={styles.roleText}>{r}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
               <div style={styles.formRow}>
-                <div style={{...styles.formGroup, flex: 1, marginRight: '12px'}}>
+                <div style={{ ...styles.formGroup, flex: 1, marginRight: "12px" }}>
                   <label style={styles.label}>Password *</label>
                   <input
                     type="password"
@@ -212,7 +163,7 @@ export default function SignUpPage() {
                     required
                   />
                 </div>
-                <div style={{...styles.formGroup, flex: 1}}>
+                <div style={{ ...styles.formGroup, flex: 1 }}>
                   <label style={styles.label}>Confirm Password *</label>
                   <input
                     type="password"
@@ -226,19 +177,17 @@ export default function SignUpPage() {
                 </div>
               </div>
 
-              <button 
-                type="submit"
-                style={styles.signupButton}
-              >
-                <span style={styles.buttonText}>Create Account</span>
-                <span style={styles.buttonIcon}>→</span>
+              <button type="submit" style={styles.signupButton} disabled={loading}>
+                {loading ? "Creating..." : "Create Account"}
               </button>
             </form>
 
             <div style={styles.footer}>
               <p style={styles.footerText}>
                 Already have an account?{" "}
-                <Link to="/login" style={styles.footerLink}>Sign In</Link>
+                <Link to="/login" style={styles.footerLink}>
+                  Sign In
+                </Link>
               </p>
             </div>
           </div>
