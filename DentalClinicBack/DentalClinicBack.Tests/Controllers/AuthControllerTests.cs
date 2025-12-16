@@ -16,14 +16,13 @@ namespace DentalClinicBack.Tests.Controllers
 
         public AuthControllerTests()
         {
-            // Setup In-Memory Database
             _dbOptions = new DbContextOptionsBuilder<DentalClinicContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            // Setup Mock Configuration for JWT
             _mockConfiguration = new Mock<IConfiguration>();
-            _mockConfiguration.Setup(c => c["Jwt:Key"]).Returns("ThisIsAVerySecureSecretKeyForJWTTokenGeneration123456");
+            _mockConfiguration.Setup(c => c["Jwt:Key"])
+                .Returns("ThisIsAVerySecureSecretKeyForJWTTokenGeneration123456");
             _mockConfiguration.Setup(c => c["Jwt:Issuer"]).Returns("DentalClinicAPI");
             _mockConfiguration.Setup(c => c["Jwt:Audience"]).Returns("DentalClinicFrontend");
         }
@@ -31,11 +30,10 @@ namespace DentalClinicBack.Tests.Controllers
         [Fact]
         public async Task Register_ValidPatient_ReturnsOk()
         {
-            // Arrange
             using var context = new DentalClinicContext(_dbOptions);
             var controller = new AuthController(context, _mockConfiguration.Object);
 
-            var registerRequest = new RegisterRequest
+            var request = new RegisterRequest
             {
                 Username = "testuser",
                 Email = "test@example.com",
@@ -43,14 +41,11 @@ namespace DentalClinicBack.Tests.Controllers
                 Role = "patient"
             };
 
-            // Act
-            var result = await controller.Register(registerRequest);
+            var result = await controller.Register(request);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.NotNull(okResult.Value);
-            
-            // Verify user was added to database
+
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == "test@example.com");
             Assert.NotNull(user);
             Assert.Equal("testuser", user.Username);
@@ -60,11 +55,10 @@ namespace DentalClinicBack.Tests.Controllers
         [Fact]
         public async Task Register_NonPatientRole_ReturnsBadRequest()
         {
-            // Arrange
             using var context = new DentalClinicContext(_dbOptions);
             var controller = new AuthController(context, _mockConfiguration.Object);
 
-            var registerRequest = new RegisterRequest
+            var request = new RegisterRequest
             {
                 Username = "doctoruser",
                 Email = "doctor@example.com",
@@ -72,34 +66,29 @@ namespace DentalClinicBack.Tests.Controllers
                 Role = "doctor"
             };
 
-            // Act
-            var result = await controller.Register(registerRequest);
+            var result = await controller.Register(request);
 
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.NotNull(badRequestResult.Value);
+            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequest.Value);
         }
 
         [Fact]
         public async Task Register_DuplicateEmail_ReturnsBadRequest()
         {
-            // Arrange
             using var context = new DentalClinicContext(_dbOptions);
             var controller = new AuthController(context, _mockConfiguration.Object);
 
-            // Add existing user
-            var existingUser = new User
+            context.Users.Add(new User
             {
                 Username = "existing",
                 Email = "existing@example.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
                 Role = "Patient",
                 CreatedAt = DateTime.UtcNow
-            };
-            context.Users.Add(existingUser);
+            });
             await context.SaveChangesAsync();
 
-            var registerRequest = new RegisterRequest
+            var request = new RegisterRequest
             {
                 Username = "newuser",
                 Email = "existing@example.com",
@@ -107,145 +96,128 @@ namespace DentalClinicBack.Tests.Controllers
                 Role = "patient"
             };
 
-            // Act
-            var result = await controller.Register(registerRequest);
+            var result = await controller.Register(request);
 
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.NotNull(badRequestResult.Value);
+            var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequest.Value);
         }
 
         [Fact]
         public async Task Login_ValidCredentials_ReturnsOkWithToken()
         {
-            // Arrange
             using var context = new DentalClinicContext(_dbOptions);
             var controller = new AuthController(context, _mockConfiguration.Object);
 
-            // Add user to database
-            var user = new User
+            context.Users.Add(new User
             {
                 Username = "testuser",
                 Email = "test@example.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
                 Role = "Patient",
                 CreatedAt = DateTime.UtcNow
-            };
-            context.Users.Add(user);
+            });
             await context.SaveChangesAsync();
 
-            var loginRequest = new LoginRequest
+            var request = new LoginRequest
             {
                 Email = "test@example.com",
                 Password = "Password123!"
             };
 
-            // Act
-            var result = await controller.Login(loginRequest);
+            var result = await controller.Login(request);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.NotNull(okResult.Value);
-            
-            // Verify response contains token and user info
-            var response = okResult.Value;
-            var token = response.GetType().GetProperty("token")?.GetValue(response, null);
-            var userInfo = response.GetType().GetProperty("user")?.GetValue(response, null);
-            
-            Assert.NotNull(token);
-            Assert.NotNull(userInfo);
+
+            var tokenProp = okResult.Value.GetType().GetProperty("token");
+            var userProp = okResult.Value.GetType().GetProperty("user");
+
+            Assert.NotNull(tokenProp);
+            Assert.NotNull(userProp);
+
+            var token = tokenProp.GetValue(okResult.Value) as string;
+            Assert.False(string.IsNullOrWhiteSpace(token));
         }
 
         [Fact]
         public async Task Login_InvalidEmail_ReturnsUnauthorized()
         {
-            // Arrange
             using var context = new DentalClinicContext(_dbOptions);
             var controller = new AuthController(context, _mockConfiguration.Object);
 
-            var loginRequest = new LoginRequest
+            var request = new LoginRequest
             {
                 Email = "nonexistent@example.com",
                 Password = "Password123!"
             };
 
-            // Act
-            var result = await controller.Login(loginRequest);
+            var result = await controller.Login(request);
 
-            // Assert
-            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.NotNull(unauthorizedResult.Value);
+            var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
+            Assert.NotNull(unauthorized.Value);
         }
 
         [Fact]
         public async Task Login_InvalidPassword_ReturnsUnauthorized()
         {
-            // Arrange
             using var context = new DentalClinicContext(_dbOptions);
             var controller = new AuthController(context, _mockConfiguration.Object);
 
-            // Add user to database
-            var user = new User
+            context.Users.Add(new User
             {
                 Username = "testuser",
                 Email = "test@example.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
                 Role = "Patient",
                 CreatedAt = DateTime.UtcNow
-            };
-            context.Users.Add(user);
+            });
             await context.SaveChangesAsync();
 
-            var loginRequest = new LoginRequest
+            var request = new LoginRequest
             {
                 Email = "test@example.com",
                 Password = "WrongPassword!"
             };
 
-            // Act
-            var result = await controller.Login(loginRequest);
+            var result = await controller.Login(request);
 
-            // Assert
-            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-            Assert.NotNull(unauthorizedResult.Value);
+            var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
+            Assert.NotNull(unauthorized.Value);
         }
 
         [Fact]
-        public async Task Login_ValidCredentials_TokenContainsCorrectClaims()
+        public async Task Login_ValidCredentials_TokenIsJwt()
         {
-            // Arrange
             using var context = new DentalClinicContext(_dbOptions);
             var controller = new AuthController(context, _mockConfiguration.Object);
 
-            var user = new User
+            context.Users.Add(new User
             {
                 Username = "testuser",
                 Email = "test@example.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
                 Role = "Patient",
                 CreatedAt = DateTime.UtcNow
-            };
-            context.Users.Add(user);
+            });
             await context.SaveChangesAsync();
 
-            var loginRequest = new LoginRequest
+            var request = new LoginRequest
             {
                 Email = "test@example.com",
                 Password = "Password123!"
             };
 
-            // Act
-            var result = await controller.Login(loginRequest);
+            var result = await controller.Login(request);
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var response = okResult.Value;
-            var token = response.GetType().GetProperty("token")?.GetValue(response, null) as string;
-            
-            Assert.NotNull(token);
-            Assert.NotEmpty(token);
-            
-            // Verify token is a valid JWT format (header.payload.signature)
+            Assert.NotNull(okResult.Value);
+
+            var tokenProp = okResult.Value.GetType().GetProperty("token");
+            Assert.NotNull(tokenProp);
+
+            var token = tokenProp.GetValue(okResult.Value) as string;
+            Assert.False(string.IsNullOrWhiteSpace(token));
+
             var parts = token.Split('.');
             Assert.Equal(3, parts.Length);
         }
