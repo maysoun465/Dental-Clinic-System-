@@ -21,19 +21,19 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies
-      run: dotnet restore DentalClinicBack/DentalClinicBack.csproj
+      run: dotnet restore DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj
       
     - name: Build application
-      run: dotnet build DentalClinicBack/DentalClinicBack.csproj --configuration Release --no-restore
+      run: dotnet build DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj --configuration Release --no-restore
       
     - name: Restore test dependencies
-      run: dotnet restore DentalClinicBack.Tests/DentalClinicBack.Tests.csproj
+      run: dotnet restore DentalClinicBack/DentalClinicBack.Tests/DentalClinicBack.Tests.csproj
       
     - name: Build tests
-      run: dotnet build DentalClinicBack.Tests/DentalClinicBack.Tests.csproj --configuration Release --no-restore
+      run: dotnet build DentalClinicBack/DentalClinicBack.Tests/DentalClinicBack.Tests.csproj --configuration Release --no-restore
       
     - name: Run tests
-      run: dotnet test DentalClinicBack.Tests/DentalClinicBack.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+      run: dotnet test DentalClinicBack/DentalClinicBack.Tests/DentalClinicBack.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
       
     - name: Publish test results
       uses: dorny/test-reporter@v1
@@ -87,10 +87,10 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies
-      run: dotnet restore DentalClinicBack/DentalClinicBack.csproj
+      run: dotnet restore DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj
       
     - name: Run security audit
-      run: dotnet list DentalClinicBack/DentalClinicBack.csproj package --vulnerable --include-transitive
+      run: dotnet list DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj package --vulnerable --include-transitive
       continue-on-error: true
 
   code-quality:
@@ -108,10 +108,10 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies
-      run: dotnet restore DentalClinicBack/DentalClinicBack.csproj
+      run: dotnet restore DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj
       
     - name: Build for analysis
-      run: dotnet build DentalClinicBack/DentalClinicBack.csproj --configuration Release --no-restore
+      run: dotnet build DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj --configuration Release --no-restore
 
   publish:
     name: Publish Artifacts
@@ -129,10 +129,10 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restore dependencies
-      run: dotnet restore DentalClinicBack/DentalClinicBack.csproj
+      run: dotnet restore DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj
       
     - name: Publish application
-      run: dotnet publish DentalClinicBack/DentalClinicBack.csproj --configuration Release --output ./publish --no-restore
+      run: dotnet publish DentalClinicBack/DentalClinicBack/DentalClinicBack.csproj --configuration Release --output ./publish --no-restore
       
     - name: Upload publish artifacts
       uses: actions/upload-artifact@v4
