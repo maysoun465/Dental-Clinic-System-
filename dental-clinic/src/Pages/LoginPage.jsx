@@ -1,6 +1,7 @@
 // src/Pages/LoginPage.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +16,6 @@ export default function LoginPage() {
       setError("Please select your role before signing in.");
       return;
     }
-
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
@@ -73,8 +73,9 @@ export default function LoginPage() {
   return (
     <div style={styles.container}>
       <div style={styles.background}></div>
-      
+
       <div style={styles.mainContent}>
+        {/* Brand section */}
         <div style={styles.brandSection}>
           <div style={styles.logo}>
             <img 
@@ -98,17 +99,10 @@ export default function LoginPage() {
             <p style={styles.subtitle}>
               Advanced dental care management system for doctors, staff, and patients
             </p>
-            <div style={styles.features}>
-              <div style={styles.featureItem}>
-              </div>
-              <div style={styles.featureItem}>
-              </div>
-              <div style={styles.featureItem}>
-              </div>
-            </div>
           </div>
         </div>
 
+        {/* Login section */}
         <div style={styles.loginSection}>
           <div style={styles.loginCard}>
             <div style={styles.loginHeader}>
@@ -116,6 +110,7 @@ export default function LoginPage() {
               <p style={styles.loginSubtitle}>Access your account</p>
             </div>
 
+            {/* Role selection */}
             <div style={styles.roleGrid}>
               {["Doctor", "Receptionist", "Patient"].map((r) => (
                 <div
@@ -131,19 +126,14 @@ export default function LoginPage() {
                       src={`src/images/${r.toLowerCase()}-icon.png`} 
                       alt={r}
                       style={styles.roleImage}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        const emoji = r === "Doctor" ? "" : r === "Receptionist" ? "" : "";
-                        e.target.nextSibling.textContent = emoji;
-                      }}
                     />
-                    <span style={styles.roleFallback}></span>
                   </div>
                   <span style={styles.roleText}>{r}</span>
                 </div>
               ))}
             </div>
 
+            {/* Email */}
             <div style={styles.formGroup}>
               <label style={styles.label}>Email Address</label>
               <input
@@ -156,6 +146,7 @@ export default function LoginPage() {
               />
             </div>
 
+            {/* Password */}
             <div style={styles.formGroup}>
               <label style={styles.label}>Password</label>
               <input
@@ -198,17 +189,13 @@ export default function LoginPage() {
                 </Link>
               </p>
             </div>
-
-            <div style={styles.footer}>
-              <p style={styles.footerText}>
-              </p>
-            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 
 const styles = {
   container: {
