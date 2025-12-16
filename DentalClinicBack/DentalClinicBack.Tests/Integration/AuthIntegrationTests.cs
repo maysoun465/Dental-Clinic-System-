@@ -33,7 +33,7 @@ namespace DentalClinicBack.Tests.Integration
                     // Add DbContext using an in-memory database for testing
                     services.AddDbContext<DentalClinicContext>(options =>
                     {
-                        options.UseInMemoryDatabase("TestDatabase" + Guid.NewGuid().ToString());
+                        options.UseInMemoryDatabase("IntegrationTestDb");
                     });
 
                     // Build the service provider
@@ -42,9 +42,10 @@ namespace DentalClinicBack.Tests.Integration
                     // Create a scope to obtain a reference to the database context
                     using var scope = sp.CreateScope();
                     var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<DentalClinicContext>();
+                    var db = scope.ServiceProvider.GetRequiredService<DentalClinicContext>();
 
                     // Ensure the database is created
+                    db.Database.EnsureDeleted();
                     db.Database.EnsureCreated();
                 });
             });
