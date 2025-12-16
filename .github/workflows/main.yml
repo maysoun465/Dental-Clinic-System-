@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "Backend", "main" ]
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   build-and-test:
     name: Build and Test
@@ -43,6 +47,7 @@ jobs:
         path: '**/test-results.trx'
         reporter: dotnet-trx
         fail-on-error: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
