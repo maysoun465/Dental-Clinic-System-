@@ -7,45 +7,66 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!role) {
-      alert("Please select your role before signing in.");
+      setError("Please select your role before signing in.");
       return;
     }
     if (!email || !password) {
-      alert("Please enter both email and password.");
+      setError("Please enter both email and password.");
       return;
     }
 
+    setLoading(true);
+    setError("");
+
     try {
-      const response = await axios.post(
-        "https://localhost:7231/api/auth/login", // backend URL
-        {
-          email,
-          password
-        }
-      );
+      const response = await fetch('https://localhost:7231/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-      const { token, user } = response.data;
+      const data = await response.json();
 
-      // حفظ البيانات في localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      // التوجيه حسب الدور
-      if (user.role === "Doctor") {
-        navigate("/doctor");
-      } else if (user.role === "Receptionist") {
-        navigate("/appointments");
-      } else if (user.role === "Patient") {
-        navigate("/about-us");
+      if (!response.ok) {
+        setError(data.message || 'Invalid email or password');
+        setLoading(false);
+        return;
       }
 
+      // Check if the role matches
+      if (data.user.role !== role) {
+        setError(`This account is registered as ${data.user.role}, not ${role}`);
+        setLoading(false);
+        return;
+      }
+
+      // Store authentication data
+      localStorage.setItem("userRole", data.user.role);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("userName", data.user.username);
+      localStorage.setItem("userEmail", data.user.email);
+
+      // Navigate based on role
+      if (data.user.role === "Doctor") {
+        navigate("/doctor");
+      } else if (data.user.role === "Receptionist") {
+        navigate("/appointments");
+      } else if (data.user.role === "Patient") {
+        navigate("/about-us");
+      }
     } catch (err) {
-      alert("Invalid credentials or server error");
-      console.error(err);
+      console.error('Login error:', err);
+      setError('Failed to connect to server. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -59,7 +80,7 @@ export default function LoginPage() {
           <div style={styles.logo}>
             <img 
               src="src/images/logo.webp" 
-              alt="Dr Menna Zakaria" 
+              alt="Dr Mohab Khairy" 
               style={styles.logoImage}
               onError={(e) => {
                 e.target.style.display = 'none';
@@ -121,6 +142,7 @@ export default function LoginPage() {
                 style={styles.input}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
               />
             </div>
 
@@ -133,15 +155,30 @@ export default function LoginPage() {
                 style={styles.input}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
               />
             </div>
 
+            {error && (
+              <div style={styles.errorMessage}>
+                <span className="material-symbols-outlined" style={{fontSize: '1.2rem'}}>error</span>
+                <span>{error}</span>
+              </div>
+            )}
+
             <button 
-              style={styles.loginButton}
+              style={{
+                ...styles.loginButton,
+                opacity: loading ? 0.7 : 1,
+                cursor: loading ? 'not-allowed' : 'pointer'
+              }}
               onClick={handleLogin}
+              disabled={loading}
             >
-              <span style={styles.buttonText}>Sign In</span>
-              <span style={styles.buttonIcon}>→</span>
+              <span style={styles.buttonText}>
+                {loading ? 'Signing In...' : 'Sign In'}
+              </span>
+              {!loading && <span style={styles.buttonIcon}>→</span>}
             </button>
 
             <div style={styles.signUpSection}>
