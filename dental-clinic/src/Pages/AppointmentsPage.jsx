@@ -3,25 +3,71 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ReceptionistSidebar from "../Appointment/ReceptionistSidebar";
 import DoctorSidebar from "../DoctorDashboard/Sidebar";
 import "./Appointments.css";
+import {
+  getAppointments,
+  createAppointment,
+  updateStatus,
+} from "../services/appointmentService";
 
 export default function AppointmentsPage() {
   const [activeTab, setActiveTab] = useState("book");
   const [userRole, setUserRole] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [age, setAge] = useState("");
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    patientFullName: "",
+    phoneNumber: "",
+    email: "",
+    appointmentDate: "",
+    preferredTime: "",
+    appointmentType: "",
+    gender: "",
+    insuranceProvider: "",
+    reasonForVisit: "",
+    medicalHistoryNotes: "",
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Check authentication
   useEffect(() => {
     const role = localStorage.getItem("userRole");
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    const token = localStorage.getItem("token");
     
-    if (!isAuthenticated || !role) {
+    console.log("Auth Check:", { role, hasToken: !!token }); // للتشخيص
+    
+    if (!token || !role) {
       navigate("/login");
       return;
     }
     setUserRole(role);
   }, [navigate]);
+
+  // Fetch appointments when switching to manage tab
+  useEffect(() => {
+    if (activeTab === "manage") {
+      console.log("Fetching appointments..."); // للتشخيص
+      fetchAppointments();
+    }
+  }, [activeTab]);
+
+  const fetchAppointments = async () => {
+    setLoading(true);
+    try {
+      console.log("Calling getAppointments API..."); // للتشخيص
+      const data = await getAppointments();
+      console.log("Appointments received:", data); // للتشخيص
+      setAppointments(data);
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+      alert("Failed to load appointments. Check console for details.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const calculateAge = (dob) => {
     if (!dob) return "";
@@ -32,13 +78,85 @@ export default function AppointmentsPage() {
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       calculatedAge--;
     }
-    return calculatedAge.toString();
+    return calculatedAge;
   };
 
   const handleDateOfBirthChange = (e) => {
     const dob = e.target.value;
     setDateOfBirth(dob);
-    setAge(calculateAge(dob));
+    const calculatedAge = calculateAge(dob);
+    setAge(calculatedAge.toString());
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!dateOfBirth) {
+      alert("Please enter date of birth");
+      return;
+    }
+    
+    if (!formData.patientFullName || !formData.phoneNumber || !formData.email) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    try {
+      // Prepare data with correct types
+      const appointmentData = {
+        ...formData,
+        dateOfBirth: dateOfBirth, // Keep as string in ISO format
+        age: parseInt(age), // Convert to number
+      };
+      
+      console.log("Submitting appointment:", appointmentData); // للتشخيص
+      
+      await createAppointment(appointmentData);
+      alert("Appointment booked successfully!");
+      
+      // Reset form
+      setFormData({
+        patientFullName: "",
+        phoneNumber: "",
+        email: "",
+        appointmentDate: "",
+        preferredTime: "",
+        appointmentType: "",
+        gender: "",
+        insuranceProvider: "",
+        reasonForVisit: "",
+        medicalHistoryNotes: "",
+      });
+      setDateOfBirth("");
+      setAge("");
+      
+      // Refresh appointments if on manage tab
+      if (activeTab === "manage") {
+        fetchAppointments();
+      }
+    } catch (error) {
+      console.error("Error creating appointment:", error);
+      const errorMessage = error.message || "Failed to book appointment";
+      alert(errorMessage);
+    }
+  };
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      console.log(`Updating appointment ${id} to ${status}`); // للتشخيص
+      await updateStatus(id, status);
+      alert(`Appointment ${status.toLowerCase()} successfully!`);
+      fetchAppointments();
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update appointment status");
+    }
   };
 
   const renderSidebar = () => {
@@ -54,7 +172,6 @@ export default function AppointmentsPage() {
   return (
     <div className="appointments-modern-container">
       {renderSidebar()}
-
       <div className="appointments-main-content">
         <header className="appointments-header">
           <div className="header-main">
@@ -68,20 +185,6 @@ export default function AppointmentsPage() {
                   : "Book and manage patient appointments at our professional dental clinic"
                 }
               </p>
-            </div>
-            <div className="header-stats">
-              <div className="stat-item">
-                <span className="stat-number">12</span>
-                <span className="stat-label">Today's Appointments</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">5</span>
-                <span className="stat-label">Pending</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">45</span>
-                <span className="stat-label">This Week</span>
-              </div>
             </div>
           </div>
         </header>
@@ -108,82 +211,96 @@ export default function AppointmentsPage() {
             <div className="tab-content">
               {activeTab === "book" ? (
                 <div className="appointment-card booking-card">
-                  <div className="card-header">
-                    <h2>
-                      {isDoctorRoute ? "Schedule New Dental Appointment" : "Book New Dental Appointment"}
-                    </h2>
-                    <p>
-                      {isDoctorRoute 
-                        ? "Schedule dental appointments with your patients" 
-                        : "Fill out the form below to book a new dental checkup or treatment"
-                      }
-                    </p>
-                  </div>
-
-                  <form className="appointment-form" onSubmit={(e) => e.preventDefault()}>
+                  <form className="appointment-form" onSubmit={handleSubmit}>
                     <div className="form-grid">
+                      {/* Patient Full Name */}
                       <div className="form-group">
-                        <label>Patient Full Name</label>
+                        <label>Patient Full Name *</label>
                         <input 
                           type="text" 
-                          placeholder="Enter patient's full name" 
+                          name="patientFullName" 
+                          value={formData.patientFullName} 
+                          onChange={handleInputChange} 
                           className="form-input"
+                          required 
                         />
                       </div>
                       
+                      {/* Phone Number */}
                       <div className="form-group">
-                        <label>Phone Number</label>
+                        <label>Phone Number *</label>
                         <input 
                           type="tel" 
-                          placeholder="(123) 456-7890" 
+                          name="phoneNumber" 
+                          value={formData.phoneNumber} 
+                          onChange={handleInputChange} 
                           className="form-input"
+                          required 
                         />
                       </div>
                       
+                      {/* Email */}
                       <div className="form-group">
-                        <label>Email Address</label>
+                        <label>Email Address *</label>
                         <input 
                           type="email" 
-                          placeholder="patient@example.com" 
+                          name="email" 
+                          value={formData.email} 
+                          onChange={handleInputChange} 
                           className="form-input"
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label>Date of Birth</label>
-                        <input 
-                          type="date" 
-                          className="form-input"
-                          value={dateOfBirth}
-                          onChange={handleDateOfBirthChange}
-                          max={new Date().toISOString().split('T')[0]}
+                          required 
                         />
                       </div>
                       
+                      {/* DOB */}
+                      <div className="form-group">
+                        <label>Date of Birth *</label>
+                        <input 
+                          type="date" 
+                          value={dateOfBirth} 
+                          onChange={handleDateOfBirthChange} 
+                          max={new Date().toISOString().split('T')[0]} 
+                          className="form-input"
+                          required 
+                        />
+                      </div>
+                      
+                      {/* Age */}
                       <div className="form-group">
                         <label>Age</label>
                         <input 
                           type="text" 
-                          placeholder="Auto-calculated"
-                          className="form-input"
-                          value={age}
-                          readOnly
-                          style={{ backgroundColor: '#f8fafc', color: '#64748b' }}
+                          value={age} 
+                          readOnly 
+                          className="form-input" 
+                          style={{ backgroundColor: '#f8fafc', color: '#64748b' }} 
                         />
                       </div>
                       
+                      {/* Appointment Date */}
                       <div className="form-group">
-                        <label>Appointment Date</label>
+                        <label>Appointment Date *</label>
                         <input 
                           type="date" 
+                          name="appointmentDate" 
+                          value={formData.appointmentDate} 
+                          onChange={handleInputChange} 
+                          min={new Date().toISOString().split('T')[0]} 
                           className="form-input"
-                          min={new Date().toISOString().split('T')[0]}
+                          required 
                         />
                       </div>
                       
+                      {/* Preferred Time */}
                       <div className="form-group">
-                        <label>Preferred Time</label>
-                        <select className="form-input">
+                        <label>Preferred Time *</label>
+                        <select 
+                          name="preferredTime" 
+                          value={formData.preferredTime} 
+                          onChange={handleInputChange} 
+                          className="form-input"
+                          required
+                        >
                           <option value="">Select a time slot</option>
                           <option value="08:00">08:00 AM</option>
                           <option value="08:30">08:30 AM</option>
@@ -207,59 +324,101 @@ export default function AppointmentsPage() {
                         </select>
                       </div>
                       
+                      {/* Appointment Type */}
                       <div className="form-group">
-                        <label>Appointment Type</label>
-                        <select className="form-input">
+                        <label>Appointment Type *</label>
+                        <select 
+                          name="appointmentType" 
+                          value={formData.appointmentType} 
+                          onChange={handleInputChange} 
+                          className="form-input"
+                          required
+                        >
                           <option value="">Select type</option>
                           <option value="checkup">Routine Checkup</option>
                           <option value="cleaning">Teeth Cleaning</option>
                           <option value="filling">Filling</option>
                           <option value="whitening">Teeth Whitening</option>
                           <option value="orthodontics">Orthodontics</option>
-                          <option value="emergency">Dental Emergency</option>
-                          <option value="other">Other</option>
+                          <option value="emergency">Emergency</option>
                         </select>
                       </div>
-
+                      
+                      {/* Gender */}
                       <div className="form-group">
-                        <label>Gender</label>
-                        <select className="form-input">
+                        <label>Gender *</label>
+                        <select 
+                          name="gender" 
+                          value={formData.gender} 
+                          onChange={handleInputChange} 
+                          className="form-input"
+                          required
+                        >
                           <option value="">Select gender</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>       
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
                         </select>
                       </div>
-
+                      
+                      {/* Insurance Provider */}
                       <div className="form-group">
                         <label>Insurance Provider</label>
                         <input 
                           type="text" 
-                          placeholder="Insurance company name" 
-                          className="form-input"
+                          name="insuranceProvider" 
+                          value={formData.insuranceProvider} 
+                          onChange={handleInputChange} 
+                          className="form-input" 
                         />
                       </div>
                       
+                      {/* Reason for Visit */}
                       <div className="form-group full-width">
-                        <label>Reason for Visit</label>
+                        <label>Reason for Visit *</label>
                         <textarea 
-                          placeholder="Please describe the reason for the dental appointment..." 
+                          name="reasonForVisit" 
+                          value={formData.reasonForVisit} 
+                          onChange={handleInputChange} 
+                          rows="4" 
                           className="form-textarea"
-                          rows="4"
+                          required 
                         />
                       </div>
-
+                      
+                      {/* Medical History Notes */}
                       <div className="form-group full-width">
                         <label>Medical History Notes</label>
                         <textarea 
-                          placeholder="Any relevant medical history, allergies, or current medications..." 
-                          className="form-textarea"
-                          rows="3"
+                          name="medicalHistoryNotes" 
+                          value={formData.medicalHistoryNotes} 
+                          onChange={handleInputChange} 
+                          rows="3" 
+                          className="form-textarea" 
                         />
                       </div>
                     </div>
-
+                    
                     <div className="form-actions">
-                      <button type="reset" className="btn btn-secondary">
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          setFormData({ 
+                            patientFullName: '', 
+                            phoneNumber: '', 
+                            email: '', 
+                            appointmentDate: '', 
+                            preferredTime: '', 
+                            appointmentType: '', 
+                            gender: '', 
+                            insuranceProvider: '', 
+                            reasonForVisit: '', 
+                            medicalHistoryNotes: '' 
+                          });
+                          setDateOfBirth('');
+                          setAge('');
+                        }} 
+                        className="btn btn-secondary"
+                      >
                         <span className="material-symbols-outlined">clear</span>
                         Clear Form
                       </button>
@@ -272,46 +431,6 @@ export default function AppointmentsPage() {
                 </div>
               ) : (
                 <div className="appointment-card management-card">
-                  <div className="card-header">
-                    <h2>Manage Dental Appointments</h2>
-                    <p>View and manage all scheduled dental appointments</p>
-                  </div>
-
-                  <div className="management-controls">
-                    <div className="search-filter-section">
-                      <div className="search-box">
-                        <span className="material-symbols-outlined">search</span>
-                        <input 
-                          type="text" 
-                          placeholder="Search patients, appointments..." 
-                          className="search-input"
-                        />
-                      </div>
-                      <div className="filter-controls">
-                        <select className="filter-select">
-                          <option value="">All Status</option>
-                          <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="completed">Completed</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-                        <select className="filter-select">
-                          <option value="">All Types</option>
-                          <option value="checkup">Routine Checkup</option>
-                          <option value="cleaning">Teeth Cleaning</option>
-                          <option value="filling">Filling</option>
-                          <option value="whitening">Teeth Whitening</option>
-                          <option value="orthodontics">Orthodontics</option>
-                        </select>
-                        <input 
-                          type="date" 
-                          className="filter-select"
-                          placeholder="Filter by date"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="table-container">
                     <table className="appointments-table">
                       <thead>
@@ -327,45 +446,72 @@ export default function AppointmentsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>
-                            <div className="patient-info">
-                              <span className="patient-name">Yassmin Ahmed</span>
-                              <span className="patient-id">ID: 1001</span>
-                            </div>
-                          </td>
-                          <td>20</td>
-                          <td>
-                            <div className="contact-info">
-                              <span>+010 13327001</span>
-                              <span>Y.ahmed2354@nu.edu</span>
-                            </div>
-                          </td>
-                          <td>Nov 2, 2025</td>
-                          <td>10:00 AM</td>
-                          <td>
-                            <span className="appointment-type filling">Filling</span>
-                          </td>
-                          <td>
-                            <span className="status-badge pending">Pending</span>
-                          </td>
-                          <td>
-                            <div className="action-buttons">
-                              <button className="action-btn view-btn" title="View Details">
-                                <span className="material-symbols-outlined">visibility</span>
-                              </button>
-                              <button className="action-btn edit-btn" title="Edit Appointment">
-                                <span className="material-symbols-outlined">edit</span>
-                              </button>
-                              <button className="action-btn confirm-btn" title="Confirm Appointment">
-                                <span className="material-symbols-outlined">check_circle</span>
-                              </button>
-                              <button className="action-btn cancel-btn" title="Cancel Appointment">
-                                <span className="material-symbols-outlined">cancel</span>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
+                        {loading ? (
+                          <tr>
+                            <td colSpan="8" style={{ textAlign: 'center', padding: '20px' }}>
+                              Loading appointments...
+                            </td>
+                          </tr>
+                        ) : appointments.length === 0 ? (
+                          <tr>
+                            <td colSpan="8" style={{ textAlign: 'center', padding: '20px' }}>
+                              No appointments found. Create one to get started!
+                            </td>
+                          </tr>
+                        ) : (
+                          appointments.map((appointment) => (
+                            <tr key={appointment.id}>
+                              <td>{appointment.patientFullName}</td>
+                              <td>{appointment.age}</td>
+                              <td>
+                                {appointment.phoneNumber}
+                                <br />
+                                {appointment.email}
+                              </td>
+                              <td>
+                                {new Date(appointment.appointmentDate).toLocaleDateString()}
+                              </td>
+                              <td>{appointment.preferredTime}</td>
+                              <td>{appointment.appointmentType}</td>
+                              <td>
+                                <span className={`status-badge ${appointment.status.toLowerCase()}`}>
+                                  {appointment.status}
+                                </span>
+                              </td>
+                              <td>
+                                <div className="action-buttons">
+                                  {appointment.status === "Pending" && (
+                                    <button 
+                                      onClick={() => handleStatusChange(appointment.id, "Confirmed")}
+                                      className="btn-confirm"
+                                      title="Confirm"
+                                    >
+                                      Confirm
+                                    </button>
+                                  )}
+                                  {appointment.status === "Confirmed" && (
+                                    <button 
+                                      onClick={() => handleStatusChange(appointment.id, "Completed")}
+                                      className="btn-complete"
+                                      title="Complete"
+                                    >
+                                      Complete
+                                    </button>
+                                  )}
+                                  {appointment.status !== "Cancelled" && (
+                                    <button 
+                                      onClick={() => handleStatusChange(appointment.id, "Cancelled")}
+                                      className="btn-cancel"
+                                      title="Cancel"
+                                    >
+                                      Cancel
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
